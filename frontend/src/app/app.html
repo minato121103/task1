@@ -1,0 +1,81 @@
+<main class="app-container">
+  <section class="main-card">
+    <ng-container *ngIf="!isLoggedIn(); else dashboard">
+      <div class="auth-screen">
+        <div class="header-section">
+          <h1 class="brand-title">Smart Solution</h1>
+          <p class="brand-subtitle">Identity Platform</p>
+        </div>
+
+        <div class="content-section">
+          <p class="desc-text">Sign in on the Keycloak server, then return to this application.</p>
+
+          <div *ngIf="error()" class="error-alert">
+            <span class="alert-message">{{ error() }}</span>
+          </div>
+
+          <button type="button" (click)="login()" class="btn btn-primary">
+            <span>Login with Keycloak</span>
+            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #dashboard>
+      <div class="dashboard-screen">
+        <div class="profile-header">
+          <div class="avatar-circle">
+            <span>{{ userProfile()?.fullName?.charAt(0) || 'U' }}</span>
+          </div>
+          <h2 class="welcome-text">Hello, {{ userProfile()?.fullName || keycloakService.getFullName() }}</h2>
+          <p class="role-caption">Authenticated by Keycloak</p>
+        </div>
+
+        <div class="profile-details">
+          <div class="detail-item position-item">
+            <span class="label">Position</span>
+            <span class="value position-badge">{{ userProfile()?.position || 'Loading...' }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Username</span>
+            <span class="value">{{ userProfile()?.username || keycloakService.getUsername() }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Email</span>
+            <span class="value">{{ userProfile()?.email || keycloakService.getEmail() }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Roles</span>
+            <span class="value">{{ userProfile()?.roles?.join(', ') || 'No roles' }}</span>
+          </div>
+        </div>
+
+        <div *ngIf="error()" class="error-alert">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <span class="alert-message">{{ error() }}</span>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" (click)="fetchUserProfile()" class="btn btn-secondary" [disabled]="loading()">
+            <span *ngIf="!loading()">Refresh</span>
+            <span *ngIf="loading()">Loading...</span>
+          </button>
+          <button type="button" (click)="logout()" class="btn btn-danger">
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </section>
+</main>

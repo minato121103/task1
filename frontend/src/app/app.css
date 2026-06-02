@@ -1,0 +1,308 @@
+/* ==========================================================================
+   Base Theme & Layout (Minimalist & Elegant)
+   ========================================================================== */
+:host {
+  display: block;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #fafafa;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #09090b; /* Deep neutral black */
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+}
+
+/* ==========================================================================
+   Card Structure (Apple/SaaS Sleek Style)
+   ========================================================================== */
+.main-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: #121214; /* Sleek dark gray */
+  border: 1px solid #27272a;  /* Subtle zinc border */
+  border-radius: 8px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  padding: 40px;
+  animation: fade-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   Auth Screen (Minimal Welcome Page)
+   ========================================================================== */
+.auth-screen {
+  text-align: center;
+}
+
+.header-section {
+  margin-bottom: 24px;
+}
+
+.brand-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  color: #ffffff;
+  margin: 0;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #a1a1aa; /* Muted gray */
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.desc-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #71717a;
+  margin-bottom: 32px;
+}
+
+.login-form {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #a1a1aa;
+}
+
+.text-input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  background-color: #09090b;
+  color: #fafafa;
+  font-size: 0.9rem;
+  padding: 10px 12px;
+  outline: none;
+}
+
+.text-input:focus {
+  border-color: #6366f1;
+}
+
+/* ==========================================================================
+   Dashboard Screen (Clean SaaS Profile)
+   ========================================================================== */
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.avatar-circle {
+  width: 56px;
+  height: 56px;
+  background-color: #27272a;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.avatar-circle span {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.welcome-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+  color: #ffffff;
+}
+
+.role-caption {
+  font-size: 0.8rem;
+  color: #71717a;
+  margin-top: 4px;
+}
+
+/* Profile details list */
+.profile-details {
+  border-top: 1px solid #27272a;
+  border-bottom: 1px solid #27272a;
+  padding: 16px 0;
+  margin-bottom: 32px;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.detail-item .label {
+  font-size: 0.85rem;
+  color: #71717a;
+}
+
+.detail-item .value {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #e4e4e7;
+  overflow-wrap: anywhere;
+  text-align: right;
+}
+
+/* Position Badge (Minimal Highlight) */
+.position-item {
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(39, 39, 42, 0.5);
+  margin-bottom: 4px;
+}
+
+.position-badge {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #a5b4fc !important; /* Soft Indigo */
+  background-color: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* ==========================================================================
+   Error Alert (Clean Box)
+   ========================================================================== */
+.error-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #fca5a5;
+  font-size: 0.8rem;
+  margin-bottom: 24px;
+}
+
+.error-alert svg {
+  width: 16px;
+  height: 16px;
+  color: #ef4444;
+  flex-shrink: 0;
+}
+
+/* ==========================================================================
+   Buttons (Minimalist Contrast)
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  width: 100%;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Primary: Solid White with Black Text */
+.btn-primary {
+  background-color: #ffffff;
+  color: #09090b;
+}
+
+.btn-primary:hover {
+  background-color: #e4e4e7;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.15s ease;
+}
+
+.btn-primary:hover .arrow-icon {
+  transform: translateX(2px);
+}
+
+/* Secondary: Muted Gray Outline */
+.btn-secondary {
+  background-color: transparent;
+  color: #fafafa;
+  border: 1px solid #27272a;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #18181b;
+  border-color: #3f3f46;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Danger: Soft Red Text Outline */
+.btn-danger {
+  background-color: transparent;
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.btn-danger:hover {
+  background-color: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+
+/* Actions Wrapper */
+.action-bar {
+  display: flex;
+  gap: 12px;
+}
+
+.action-bar .btn {
+  flex: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .main-card {
+    padding: 30px 24px;
+  }
+}

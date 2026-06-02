@@ -1,0 +1,15 @@
+node_modules/
+dist/
+target/
+
+.angular/
+.idea/
+.vscode/
+
+*.log
+*.tmp
+
+backend/target/
+backend/src/main/resources/
+frontend/dist/
+frontend/node_modules/

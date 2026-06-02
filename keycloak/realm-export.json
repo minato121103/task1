@@ -1,0 +1,58 @@
+{
+  "realm": "ssvn",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "user",
+        "description": "Default application user"
+      },
+      {
+        "name": "manager",
+        "description": "Manager role"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "ssvn-platform-client-id",
+      "name": "SSVN Angular Client",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "implicitFlowEnabled": false,
+      "frontchannelLogout": true,
+      "redirectUris": [
+        "http://localhost:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    }
+  ],
+  "users": [
+    {
+      "username": "ssvn",
+      "enabled": true,
+      "email": "ssvn@example.com",
+      "firstName": "SSVN",
+      "lastName": "Platform User",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "123456",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "user",
+        "manager"
+      ]
+    }
+  ]
+}
