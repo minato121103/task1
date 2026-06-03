@@ -8,6 +8,9 @@ import com.example.backend.service.UserProfileService;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
@@ -22,14 +25,25 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Override
     public UserProfileResponse getCurrentUserProfile(Jwt jwt) {
         String username = getUsername(jwt);
-        UserEntity databaseUser = userRepository.findByUsername(username)
-                .orElseGet(() -> createUserFromToken(jwt, username));
+        return userRepository.findByUsername(username)
+                .map(databaseUser -> createUserProfileFromDatabase(jwt, databaseUser))
+                .orElseGet(() -> createUserProfileFromToken(jwt, username));
+    }
 
+    private UserProfileResponse createUserProfileFromDatabase(Jwt jwt, UserEntity databaseUser) {
         return new UserProfileResponse(
                 databaseUser.getUsername(),
                 databaseUser.getFullName(),
-                databaseUser.getEmail(),
                 databaseUser.getPosition(),
+                getRoles(jwt, databaseUser)
+        );
+    }
+
+    private UserProfileResponse createUserProfileFromToken(Jwt jwt, String username) {
+        return new UserProfileResponse(
+                username,
+                getFullName(jwt, username),
+                DEFAULT_POSITION,
                 KeycloakJwtRoles.extract(jwt)
         );
     }
@@ -41,15 +55,25 @@ public class UserProfileServiceImpl implements UserProfileService {
                 : jwt.getSubject();
     }
 
-    private UserEntity createUserFromToken(Jwt jwt, String username) {
-        String email = jwt.getClaimAsString("email");
+    private String getFullName(Jwt jwt, String username) {
         String fullName = jwt.getClaimAsString("name");
+        return fullName != null && !fullName.isBlank() ? fullName : username;
+    }
 
-        return new UserEntity(
-                username,
-                fullName != null && !fullName.isBlank() ? fullName : username,
-                email != null && !email.isBlank() ? email : "unknown@example.com",
-                DEFAULT_POSITION
-        );
+    private List<String> getRoles(Jwt jwt, UserEntity databaseUser) {
+        List<String> jwtRoles = KeycloakJwtRoles.extract(jwt);
+        if (!jwtRoles.isEmpty()) {
+            return jwtRoles;
+        }
+
+        String databaseRoles = databaseUser.getRoles();
+        if (databaseRoles == null || databaseRoles.isBlank()) {
+            return List.of();
+        }
+
+        return Arrays.stream(databaseRoles.split(","))
+                .map(String::trim)
+                .filter(role -> !role.isBlank())
+                .toList();
     }
 }

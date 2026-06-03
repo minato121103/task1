@@ -7,7 +7,6 @@ import { KeycloakService } from '../../core/auth/keycloak.service';
 interface UserInfo {
   username: string;
   fullName: string;
-  email: string;
   position: string;
   roles: string[];
 }

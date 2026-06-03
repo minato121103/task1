@@ -15,7 +15,6 @@ interface AuthTokenResponse {
 
 export interface AuthenticatedUser {
   username: string;
-  email: string;
   fullName: string;
 }
 
@@ -80,22 +79,16 @@ export class KeycloakService {
   getCurrentUser(): AuthenticatedUser {
     const token = this.decodeToken(this.getToken());
     const username = token?.['preferred_username'] as string | undefined;
-    const email = token?.['email'] as string | undefined;
     const fullName = token?.['name'] as string | undefined;
 
     return {
       username: username ?? '',
-      email: email ?? '',
       fullName: fullName ?? username ?? ''
     };
   }
 
   getUsername(): string {
     return this.getCurrentUser().username;
-  }
-
-  getEmail(): string {
-    return this.getCurrentUser().email;
   }
 
   getFullName(): string {

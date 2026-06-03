@@ -3,7 +3,7 @@ package com.example.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "app_users")
+@Table(name = "app_user")
 public class UserEntity {
 
     @Id
@@ -17,19 +17,19 @@ public class UserEntity {
     private String fullName;
 
     @Column(nullable = false)
-    private String email;
-
-    @Column(nullable = false)
     private String position;
+
+    @Column
+    private String roles;
 
     public UserEntity() {
     }
 
-    public UserEntity(String username, String fullName, String email, String position) {
+    public UserEntity(String username, String fullName, String position, String roles) {
         this.username = username;
         this.fullName = fullName;
-        this.email = email;
         this.position = position;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -56,19 +56,19 @@ public class UserEntity {
         this.fullName = fullName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPosition() {
         return position;
     }
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 }

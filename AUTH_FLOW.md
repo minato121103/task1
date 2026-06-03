@@ -2,12 +2,12 @@
 
 ## 1. Local Runtime
 
-The system runs locally with Angular, Spring Boot, and PostgreSQL. Keycloak is the remote identity provider.
+The system runs locally with Angular and Spring Boot. MariaDB and Keycloak are remote services.
 
 - Frontend: `http://localhost:4200`
 - Backend: `http://localhost:8080`
-- PostgreSQL: `localhost:5432`
-- Database: `app_db`
+- MariaDB: `mariadb.smartsolutionvn.com.vn:33060`
+- Database/schema: `ssw` by default, configurable through `DB_URL`
 - Keycloak: `https://id.smartsolutionvn.com.vn`
 - Realm: `ssvn`
 - Client ID: `ssvn-platform-client-id`
@@ -27,13 +27,7 @@ cd C:\project\task1\frontend
 npm start
 ```
 
-PostgreSQL setup in DBeaver:
-
-```sql
-CREATE DATABASE app_db;
-```
-
-Spring Boot creates/updates table `app_users` and loads seed data from `backend/src/main/resources/data.sql`.
+Spring Boot reads user profile data from the existing table `app_user`.
 
 ## 1.1. Structure Alignment
 
@@ -84,7 +78,7 @@ Main functions:
 - Refreshes tokens through `/api/auth/refresh`.
 - Logs out through `/api/auth/logout`.
 - Validates JWTs for protected APIs as an OAuth2 Resource Server.
-- Loads application-specific user data from PostgreSQL.
+- Loads application-specific user data from MariaDB.
 
 Main functions:
 
@@ -93,7 +87,7 @@ Main functions:
 - `AuthController.refresh()`: receives refresh token, calls Keycloak with `grant_type=refresh_token`, and returns new tokens.
 - `AuthController.logout()`: sends refresh token to Keycloak logout endpoint.
 - `SecurityConfig.securityFilterChain()`: permits `/api/auth/**`, protects all other APIs, and configures JWT validation.
-- `UserController.getCurrentUser()`: reads the validated JWT, extracts username/roles, queries PostgreSQL by username, and returns profile data.
+- `UserController.getCurrentUser()`: reads the validated JWT, extracts username/roles, queries MariaDB by username, and returns profile data.
 
 ### Keycloak
 
@@ -102,10 +96,10 @@ Main functions:
 - Signs JWTs and exposes realm metadata for backend validation.
 - Stores identity claims and roles.
 
-### PostgreSQL
+### MariaDB
 
 - Stores app-specific user profile data.
-- The demo uses `app_users.position` to prove that business data is loaded from the local database, not from Keycloak.
+- The demo uses `app_user.position` to prove that business data is loaded from the application database, not from Keycloak.
 
 ## 3. End-To-End Login Flow
 
@@ -157,13 +151,13 @@ Main functions:
 
 13. Spring Security validates the JWT signature and issuer.
 14. Backend extracts username, email, name, and roles from JWT claims.
-15. Backend queries PostgreSQL table `app_users` by username.
+15. Backend queries MariaDB table `app_user` by username.
 16. Backend returns username, email, roles, and position.
 17. Angular displays the profile.
 
 Short explanation:
 
-> Authentication is handled by Keycloak. Authorization and API protection are handled by Spring Security JWT validation. Application data such as position is loaded from PostgreSQL.
+> Authentication is handled by Keycloak. Authorization and API protection are handled by Spring Security JWT validation. Application data such as position is loaded from MariaDB.
 
 ## 4. Demo Script
 
@@ -173,15 +167,15 @@ Use this order for a smooth 5-7 minute presentation.
    - Angular is the client.
    - Spring Boot is the backend/resource server.
    - Keycloak is the identity provider.
-   - PostgreSQL stores app-specific profile data.
+   - MariaDB stores app-specific profile data.
 
 2. Show database in DBeaver.
-   - Open `app_db`.
-   - Show table `app_users`.
+   - Connect to `jdbc:mariadb://mariadb.smartsolutionvn.com.vn:33060/ssw`.
+   - Show table `app_user`.
    - Point to user `ssvn` and the `position` value.
 
 3. Show backend configuration.
-   - Datasource points to PostgreSQL local.
+   - Datasource points to MariaDB.
    - JWT issuer points to Keycloak realm `ssvn`.
    - `client_secret` is in backend config, not in Angular.
 
@@ -214,13 +208,13 @@ Use this order for a smooth 5-7 minute presentation.
    - Login flow works end to end.
    - Secret is not exposed to frontend.
    - Backend protects APIs with JWT.
-   - Position comes from local PostgreSQL.
+   - Position comes from MariaDB.
 
 ## 5. Demo Checklist
 
-- PostgreSQL service is running.
-- Database `app_db` exists.
-- Table `app_users` has user `ssvn`.
+- MariaDB connection is reachable.
+- Database/schema `ssw` exists, or `DB_URL` points to the correct schema.
+- Table `app_user` has user `ssvn`.
 - Backend runs on `localhost:8080`.
 - Frontend runs on `localhost:4200`.
 - Keycloak client allows redirect URI:

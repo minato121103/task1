@@ -68,7 +68,7 @@ public class KeycloakAuthServiceImpl implements KeycloakAuthService {
                 .queryParam("client_id", clientId)
                 .queryParam("redirect_uri", backendRedirectUri)
                 .queryParam("response_type", "code")
-                .queryParam("scope", "openid profile email")
+                .queryParam("scope", "openid profile")
                 .queryParam("prompt", "login")
                 .queryParam("state", state)
                 .queryParam("code_challenge", createCodeChallenge(codeVerifier))

@@ -4,18 +4,16 @@
       <div class="auth-screen">
         <div class="header-section">
           <h1 class="brand-title">Smart Solution</h1>
-          <p class="brand-subtitle">Identity Platform</p>
         </div>
 
         <div class="content-section">
-          <p class="desc-text">Sign in on the Keycloak server, then return to this application.</p>
 
           <div *ngIf="error()" class="error-alert">
             <span class="alert-message">{{ error() }}</span>
           </div>
 
           <button type="button" (click)="login()" class="btn btn-primary">
-            <span>Login with Keycloak</span>
+            <span>Đăng Nhập</span>
             <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
@@ -45,8 +43,8 @@
           </div>
 
           <div class="detail-item">
-            <span class="label">Email</span>
-            <span class="value">{{ userProfile()?.email || keycloakService.getEmail() }}</span>
+            <span class="label">Full name</span>
+            <span class="value">{{ userProfile()?.fullName || keycloakService.getFullName() }}</span>
           </div>
 
           <div class="detail-item">
@@ -66,7 +64,7 @@
 
         <div class="action-bar">
           <button type="button" (click)="logout()" class="btn btn-danger">
-            <span>Logout</span>
+            <span>Đăng Xuất</span>
           </button>
         </div>
       </div>
