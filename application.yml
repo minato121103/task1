@@ -1,0 +1,41 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/app_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  sql:
+    init:
+      mode: always
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI:https://id.smartsolutionvn.com.vn/realms/ssvn}
+
+app:
+  auth:
+    backend-redirect-uri: ${BACKEND_REDIRECT_URI:http://localhost:8080/api/auth/callback}
+    frontend-redirect-uri: ${FRONTEND_REDIRECT_URI:http://localhost:4200}
+  keycloak:
+    base-url: ${KEYCLOAK_BASE_URL:https://id.smartsolutionvn.com.vn}
+    realm: ${KEYCLOAK_REALM:ssvn}
+    client-id: ${KEYCLOAK_CLIENT_ID:ssvn-platform-client-id}
+    client-secret: ${KEYCLOAK_CLIENT_SECRET:cn7crCkSWaXBcmWzDCxF2S2qq9jZ9hLN}
