@@ -1,12 +1,11 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { from, switchMap } from 'rxjs';
-import { KeycloakService } from '../services/keycloak.service';
-
-const BACKEND_ORIGIN = 'http://localhost:8080';
+import { environment } from '../../../environments/environment';
+import { KeycloakService } from '../auth/keycloak.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  if (!req.url.startsWith(BACKEND_ORIGIN) || req.url.startsWith(`${BACKEND_ORIGIN}/api/auth/`)) {
+  if (!req.url.startsWith(environment.backendOrigin) || req.url.startsWith(`${environment.backendOrigin}/api/auth/`)) {
     return next(req);
   }
 

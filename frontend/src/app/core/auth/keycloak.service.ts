@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
-const API_BASE_URL = 'http://localhost:8080/api';
-const KEYCLOAK_AUTH_URL = 'https://id.smartsolutionvn.com.vn/realms/ssvn/protocol/openid-connect/auth';
-const KEYCLOAK_CLIENT_ID = 'ssvn-platform-client-id';
-const BACKEND_CALLBACK_URL = 'http://localhost:8080/api/auth/callback';
+const LOGIN_URL = `${environment.apiUrl}/auth/authorize`;
 
 interface AuthTokenResponse {
   accessToken: string;
@@ -36,22 +34,17 @@ export class KeycloakService {
 
   login(): void {
     this.clearToken();
-    const params = new URLSearchParams({
-      client_id: KEYCLOAK_CLIENT_ID,
-      redirect_uri: BACKEND_CALLBACK_URL,
-      response_type: 'code',
-      scope: 'openid profile email',
-      prompt: 'login',
-      state: crypto.randomUUID()
-    });
+    window.location.assign(LOGIN_URL);
+  }
 
-    window.location.href = `${KEYCLOAK_AUTH_URL}?${params.toString()}`;
+  getLoginUrl(): string {
+    return LOGIN_URL;
   }
 
   async logout(): Promise<void> {
     try {
       if (this.refreshTokenValue) {
-        await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/auth/logout`, {
+        await firstValueFrom(this.http.post<void>(`${environment.apiUrl}/auth/logout`, {
           refreshToken: this.refreshTokenValue
         }));
       }
@@ -116,7 +109,7 @@ export class KeycloakService {
     }
 
     try {
-      const token = await firstValueFrom(this.http.post<AuthTokenResponse>(`${API_BASE_URL}/auth/refresh`, {
+      const token = await firstValueFrom(this.http.post<AuthTokenResponse>(`${environment.apiUrl}/auth/refresh`, {
         refreshToken: this.refreshTokenValue
       }));
       this.storeToken(token);

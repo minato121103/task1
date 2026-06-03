@@ -35,12 +35,33 @@ CREATE DATABASE app_db;
 
 Spring Boot creates/updates table `app_users` and loads seed data from `backend/src/main/resources/data.sql`.
 
+## 1.1. Structure Alignment
+
+This project applies the parts of the reference structure that fit the current single frontend + single backend scope.
+
+Applied:
+
+- Backend uses controller/service/repository layers.
+- Backend services expose interfaces in `service/` and implementations in `service/impl/`.
+- Frontend auth singleton lives under `app/core/auth/`.
+- Frontend HTTP auth interceptor lives under `app/core/http/`.
+- Frontend screen logic lives under `app/pages/profile/`.
+- Frontend runtime URLs live in `src/environments/`.
+
+Not applied because the project does not currently have platform libraries, shell, or micro-frontends:
+
+- `@platform/contracts`
+- `@platform/shared`
+- `@platform/ui-kit`
+- Module Federation shell/remotes
+- `/api/me/menu` and `/api/me/perms`
+
 ## 2. Component Responsibilities
 
 ### Frontend Angular
 
 - Shows the login/profile UI.
-- Redirects the browser directly to the Keycloak authorization endpoint.
+- Redirects the browser to backend `/api/auth/authorize`; backend then redirects to Keycloak.
 - Reads tokens from the URL fragment after backend callback redirects back to Angular.
 - Keeps tokens in memory only, not in `localStorage`.
 - Calls backend API `GET /api/users/me`.
@@ -48,7 +69,7 @@ Spring Boot creates/updates table `app_users` and loads seed data from `backend/
 
 Main functions:
 
-- `KeycloakService.login()`: clears runtime token, builds the Keycloak authorize URL, and redirects to Keycloak.
+- `KeycloakService.login()`: clears runtime token and redirects to backend `/api/auth/authorize`.
 - `KeycloakService.handleAuthRedirect()`: reads `access_token` and `refresh_token` from the URL fragment, stores them in memory, then removes the fragment from the address bar.
 - `KeycloakService.getValidToken()`: returns the current access token or refreshes it through `/api/auth/refresh`.
 - `authInterceptor`: skips `/api/auth/**`, attaches Bearer token to other backend requests.
@@ -57,6 +78,7 @@ Main functions:
 ### Backend Spring Boot
 
 - Keeps `client_secret`; the frontend never receives or sends it.
+- Builds the Keycloak authorization URL from backend configuration.
 - Receives Keycloak callback at `/api/auth/callback`.
 - Exchanges authorization code for tokens at the Keycloak token endpoint.
 - Refreshes tokens through `/api/auth/refresh`.
@@ -66,6 +88,7 @@ Main functions:
 
 Main functions:
 
+- `AuthController.authorize()`: redirects the browser to the Keycloak authorization endpoint.
 - `AuthController.callback()`: receives `code`, exchanges it for tokens using `client_secret`, and redirects back to Angular with token values in the URL fragment.
 - `AuthController.refresh()`: receives refresh token, calls Keycloak with `grant_type=refresh_token`, and returns new tokens.
 - `AuthController.logout()`: sends refresh token to Keycloak logout endpoint.
@@ -92,17 +115,23 @@ Main functions:
 4. `KeycloakService.login()` redirects the browser to:
 
    ```text
+   http://localhost:8080/api/auth/authorize
+   ```
+
+5. `AuthController.authorize()` redirects the browser to:
+
+   ```text
    https://id.smartsolutionvn.com.vn/realms/ssvn/protocol/openid-connect/auth
    ```
 
-5. User enters username/password on the Keycloak page.
-6. Keycloak redirects to:
+6. User enters username/password on the Keycloak page.
+7. Keycloak redirects to:
 
    ```text
    http://localhost:8080/api/auth/callback?code=...
    ```
 
-7. `AuthController.callback()` exchanges the code for tokens using:
+8. `AuthController.callback()` exchanges the code for tokens using:
 
    ```text
    client_id
@@ -112,25 +141,25 @@ Main functions:
    redirect_uri
    ```
 
-8. Backend redirects back to Angular with tokens in the URL fragment.
-9. Angular reads the tokens into memory and removes the fragment from the URL.
-10. Angular calls:
+9. Backend redirects back to Angular with tokens in the URL fragment.
+10. Angular reads the tokens into memory and removes the fragment from the URL.
+11. Angular calls:
 
    ```text
    GET http://localhost:8080/api/users/me
    ```
 
-11. `authInterceptor` attaches:
+12. `authInterceptor` attaches:
 
    ```text
    Authorization: Bearer <access_token>
    ```
 
-12. Spring Security validates the JWT signature and issuer.
-13. Backend extracts username, email, name, and roles from JWT claims.
-14. Backend queries PostgreSQL table `app_users` by username.
-15. Backend returns username, email, roles, and position.
-16. Angular displays the profile.
+13. Spring Security validates the JWT signature and issuer.
+14. Backend extracts username, email, name, and roles from JWT claims.
+15. Backend queries PostgreSQL table `app_users` by username.
+16. Backend returns username, email, roles, and position.
+17. Angular displays the profile.
 
 Short explanation:
 
